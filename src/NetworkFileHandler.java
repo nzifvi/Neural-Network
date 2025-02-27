@@ -235,33 +235,78 @@ public class NetworkFileHandler {
         return inputArray;
     }
 
-    public static double[][][][] loadInput(final File file, final int filterNo,  final int filterDepth, final int standardHeight, final int standardWidth) throws IOException {
+    public static double[][][][] loadInput(final File file, final int filterNo,  final int filterDepth, final int standardHeight, final int standardWidth) {
         double[][][][] inputArray = new double[filterNo][filterDepth][standardHeight][standardWidth];
-
-        if (file == null) { //Redo to initialise a 4d matrix of 1s.
-            System.out.println("  ! FATAL ERROR: Input file is null. This may potentially be due to a failure to read");
-            System.exit(1);
-        } else {
-            int nCount = 0;
-            int aCount = 0;
-            int row = 0;
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = bufferedReader.readLine()) != null && nCount < filterNo) {
-                if (line.equals("n")) {
-                    nCount++;
-                    row = 0;
-                } else if (line.equals("a")) {
-                    aCount++;
-                    row = 0;
-                } else {
-                    String[] values = line.split("\\s+");
-                    double[] matrixRow = Arrays.stream(values).mapToDouble(Double::parseDouble).toArray();
-                    inputArray[aCount][nCount][row] = matrixRow;
-                    row++;
+        try{
+            if (file == null) { //Redo to initialise a 4d matrix of 1s.
+                System.out.println("  ! FATAL ERROR: Input file is null. This may potentially be due to a failure to read");
+                System.exit(1);
+            } else {
+                int nCount = 0;
+                int aCount = 0;
+                int row = 0;
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    if (line.equals("n")) {
+                        nCount++;
+                        row = 0;
+                    } else if (line.equals("a")) {
+                        aCount++;
+                        nCount = 0;
+                        row = 0;
+                    } else {
+                        String[] values = line.split("\\s+");
+                        double[] matrixRow = Arrays.stream(values).mapToDouble(Double::parseDouble).toArray();
+                        inputArray[aCount][nCount][row] = matrixRow;
+                        row++;
+                    }
                 }
             }
+            return inputArray;
+        }catch(Exception e){
+            System.out.println("  ! FATAL ERROR: An unexpected error occurred during attempting to read " + file + " during the loading of an input");
+            e.printStackTrace();
+            System.exit(1);
         }
-        return inputArray;
+        return null;
+    }
+
+    public static double[] loadInput(final File file, final int no){
+        double[] inputArray = new double[no];
+        try{
+            Scanner scanObj = new Scanner(file);
+            int i = 0;
+            while(i < no && scanObj.hasNext()){
+                inputArray[i] = scanObj.nextDouble();
+                i++;
+            }
+            scanObj.close();
+            return inputArray;
+        }catch(Exception e){
+            System.out.println("  ! FATAL ERROR: An unexpected error occurred during attempting to read " + file + " during the loading of an input");
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return null;
+    }
+
+    public static int[] loadControls(final File file, final int no){
+        int[] inputArray = new int[no];
+        try{
+            Scanner scanObj = new Scanner(file);
+            int i = 0;
+            while(i < no && scanObj.hasNext()){
+                inputArray[i] = scanObj.nextInt();
+                i++;
+            }
+            scanObj.close();
+            return inputArray;
+        }catch(Exception e){
+            System.out.println("  ! FATAL ERROR: An unexpected error occurred during attempting to read " + file + " during the loading of an input");
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return null;
     }
 }

@@ -1,0 +1,11 @@
+a
+b
+c
+d
+e
+
+a = number of filters for layer.
+b = depth of EACH filter.
+c = height of EACH filter.
+d = width of EACH filter.
+e = amount of biases for this layer
